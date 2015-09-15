@@ -1,0 +1,19 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'init', '[-f' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 error Error: write EPIPE
+4 error     at errnoException (net.js:904:11)
+4 error     at Object.afterWrite (net.js:720:19)
+5 error If you need help, you may report this *entire* log,
+5 error including the npm and node versions, at:
+5 error     <http://github.com/npm/npm/issues>
+6 error System Darwin 14.5.0
+7 error command "node" "/usr/local/bin/npm" "init" "[-f"
+8 error cwd /Applications/MAMP/htdocs/chat-joackym
+9 error node -v v0.10.32
+10 error npm -v 1.4.28
+11 error syscall write
+12 error code EPIPE
+13 error errno EPIPE
+14 verbose exit [ 1, true ]

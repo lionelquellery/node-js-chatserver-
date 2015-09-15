@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>chat de jojo</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+<div class="chat">
+	<input class="chat-name" type="text" placeholder="entrer ton nom">
+	<div class="chat-messages">
+	  
+
+	</div>
+		<textarea class="chat-textarea" placeholder="entrez votre messages "></textarea>
+		<div class="chat-status">status:<span>idle</span></div>
+	
+		
+	
+</div>
+	<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+
+	<script type="text/javascript">
+	(function(){
+		var getNode = function(s){
+			return document.querySelector(s);
+		},
+
+		textarea = getNode('.chat textarea'),
+		chatName = getNode('.chat-name'),
+		messages = getNode('.chat-messages'),
+		status = getNode('.chat-status span');
+
+		statusDefault = status.textContent,
+
+
+         // passage en paramétre du status du message 
+		setStatus = function(s){
+
+			status.textContent = s ;
+
+			if(s !== statusDefault){
+
+				var delay = setTimeout(function(){
+					setStatus(statusDefault),
+					clearInterval(delay);
+
+				},3000);
+			}
+
+		};
+
+		
+
+		try{
+			var socket = io.connect('http://127.0.0.1:8080');
+		}catch(e){
+			// status
+
+		}
+
+		if(socket !== undefined){
+			// ecoute des sorti de message via socket 
+			socket.on('output',function(data){
+
+				// loop
+				if(data.length){
+					for(var x = 0; x < data.length; x = x +1) {
+						var message = document.createElement('div');
+						message.setAttribute('class','chat-message');
+						message.textContent = data[x].name + ':'+ data[x].message; 
+
+						//append 
+						messages.appendChild(message);
+						messages.insertBefore(message,messages.firstChild);
+
+					}
+				}
+
+
+			});
+
+
+
+              // écoute du status du messages 
+              socket.on('status',function(data){
+              	setStatus((typeof data === 'object') ? data.message : data);
+
+
+              	if(data.clear === true){
+              		textarea.value = '';
+              	}
+
+
+              });
+
+             // écoute des touches du clavier 
+			textarea.addEventListener('keydown',function(event){
+				var self = this,
+				    name = chatName.value;
+
+				if(event.which === 13 && event.shiftKey === false){
+					socket.emit('input',{
+						name : name,
+						message: self.value
+					});
+				}    
+
+			});
+		}
+
+
+	})();
+
+
+	</script>
+</body>
+</html>
